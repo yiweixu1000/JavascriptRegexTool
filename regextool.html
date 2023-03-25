@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Regex Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+		/* This style is for text fields */
+		/* control */
+		textarea {
+			display: block;
+			width: calc(100% - 1.6em);
+			margin: .8em;
+			min-height: 200px;
+		}
+
+		/* # refers to id */
+		#pattern {
+			width: calc(100% - 1.6em);
+			margin: .8em;
+		}
+		/* . refers to class */
+		.buttonSet {
+			width: 130px;
+		}
+		
+    </style>
+	<style>
+		/* this style is for 2 columns */
+		
+		.column-left {
+		  float: left;
+		  width: 70%;
+		  //background-color:#aaa;
+		  padding: 10px;
+		  height: 800px; 
+		  box-sizing: border-box;
+		}
+		
+		.column-right {
+		  float: left;
+		  width: 30%;
+		  //background-color:#bbb;
+		  padding: 10px;
+		  height: 800px; 
+		  box-sizing: border-box;
+		}		
+	</style>
+	
+    <script>
+        function run() {
+
+            let input = document.getElementById("input").value;
+			//g=global, i=case insensitive, m=multiline
+			let gimFlag = "";
+			if (document.getElementById("g").checked === true) {
+				gimFlag += "g";
+			}
+			if (document.getElementById("i").checked === true) {
+				gimFlag += "i";
+			}
+			if (document.getElementById("m").checked === true) {
+				gimFlag += "m";
+			}
+			if (document.getElementById("s").checked === true) {
+				gimFlag += "s";
+			}	
+			if (document.getElementById("u").checked === true) {
+				gimFlag += "u";
+			}	
+			if (document.getElementById("y").checked === true) {
+				gimFlag += "y";
+			}			
+            //let pattern = /\d/gim
+            let objRE; //regular expression object
+			let matches = "";
+			let subMatches = "";
+			//.exec returns first match, while loop goes though the rest 
+			if (gimFlag.match("g")) {
+				let pattern = new RegExp(document.getElementById("pattern").value, gimFlag);
+				while (objRE = pattern.exec(input)){
+					matches += (objRE[0]) + "\r\n";
+					if (objRE.length > 0) {
+						for (let i = 1; i < objRE.length; i++) {
+							subMatches += (objRE[i]) + "\r\n";
+						}
+					}
+				}	
+			} else {
+				if (gimFlag.match("i") || 
+					gimFlag.match("m") || 
+					gimFlag.match("s") || 
+					gimFlag.match("u") || 
+					gimFlag.match("y")) {
+					let pattern = new RegExp(document.getElementById("pattern").value, gimFlag);
+					while (objRE = pattern.exec(input)){
+						matches += (objRE[0]) + "\r\n";
+						if (objRE.length > 0) {
+							for (let i = 1; i < objRE.length; i++) {
+								subMatches += (objRE[i]) + "\r\n";
+							}
+						}
+						break;
+					}
+				} else {
+					let pattern = new RegExp(document.getElementById("pattern").value);
+					while (objRE = pattern.exec(input)){
+						matches += (objRE[0]) + "\r\n";
+						if (objRE.length > 0) {
+							for (let i = 1; i < objRE.length; i++) {
+								subMatches += (objRE[i]) + "\r\n";
+							}
+						}
+						break;
+					}
+				}
+			}
+            match.value = matches;
+			submatch.value = subMatches;
+        }
+		function setDefault() {
+			document.getElementById("g").checked = true;
+			document.getElementById("i").checked = true;
+			document.getElementById("m").checked = true;
+			document.getElementById("s").checked = true;
+			document.getElementById("u").checked = true;
+			document.getElementById("y").checked = false;
+		}
+		function clearAll() {
+			clearInput();
+			clearPattern();
+			clearMatch();
+			clearSubmatch();
+		}
+		function clearInput() {
+			document.getElementById("input").value = "";
+		}
+		function clearPattern() {
+			document.getElementById("pattern").value = "";
+		}
+		function clearMatch() {
+			document.getElementById("match").value = "";
+		}
+		function clearSubmatch() {
+			document.getElementById("submatch").value = "";
+		}		
+    </script>
+</head>
+
+<body>
+
+	<div class="row">
+		<div class="column-left">
+			<!-- h3>Column 1</h3 -->
+			<a href="https://www.w3schools.com/jsref/jsref_obj_regexp.asp" target="_blank">W3Schools JavaScript RegExp Reference</a>
+			<center>
+				<textarea id="input" placeholder="Input"></textarea>
+				<input id="pattern" placeholder="Pattern">
+				<textarea id="match" placeholder="Matches"></textarea>
+				<textarea id="submatch" placeholder="Submatch"></textarea>
+			</center>
+		</div>
+		<div class="column-right">
+			<!-- h3>Column 2</h3 -->
+			<input type="checkbox" id="g" name="g" value="g" checked>
+			<label for="g"> Global, finding all matches rather than just the first</label><br>
+			<input type="checkbox" id="i" name="i" value="i" checked>
+			<label for="i"> Case Insensitive</label><br>
+			<input type="checkbox" id="m" name="m" value="m" checked>
+			<label for="m"> Multiline, changing the behavior of ^ and $</label><br>
+			<input type="checkbox" id="s" name="s" value="s" checked>
+			<label for="s"> Allow matching newline chars</label><br>
+			<input type="checkbox" id="u" name="u" value="u" checked>
+			<label for="u"> Unicode support</label><br>
+			<input type="checkbox" id="y" name="y" value="y">
+			<label for="y"> Sticky, looking only at exact position in the text</label><br>			
+			<button class="buttonSet" id="default" onclick="setDefault()">Default</button><br>
+			<br>
+			<button class="buttonSet" id="run" onclick="run()">Run</button><br>
+			<br>
+			<button class="buttonSet" id="clearAll" onclick="clearAll()">Clear All</button><br>			
+			<button class="buttonSet" id="clearInput" onclick="clearInput()">Clear Input</button><br>
+			<br>
+			<button class="buttonSet" id="clearPattern" onclick="clearPattern()">Clear Pattern</button><br>
+			<br><br><br><br><br><br><br><br><br><br><br>
+			<button class="buttonSet" id="clearMatch" onclick="clearMatch()">Clear Matches</button><br>
+			<br><br><br><br><br><br><br><br><br><br><br>
+			<button class="buttonSet" id="clearSubmatch" onclick="clearSubmatch()">Clear Submatches</button><br>
+			<br>			
+		</div>
+	</div>
+</body>
+
+</html>
